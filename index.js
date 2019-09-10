@@ -117,8 +117,27 @@ function Add() {
     }
 }
 
+function URL() {
+    return {
+        view: (vnode) => {
+            let url = window.location.pathname + '?' + m.buildQueryString(state);
+            return m('div.columns',
+                m('div.column.col-12',
+                    m('a', {href: url}, 'Link')
+                )
+            );
+        }
+    }
+}
+
+
 function Main() {
     return {
+        onupdate: () => {
+            let s = m.buildQueryString(state);
+            console.log(s);
+        },
+
         view: () => {
             let rows = [];
             let total = -1;
@@ -148,9 +167,17 @@ function Main() {
                 rows.unshift(m(Add, {row: i}));
             }
 
+            rows.unshift(m(URL));
             return rows;
         }
     }
 }
+
+var object = m.parseQueryString(window.location.search);
+if (object.hasOwnProperty('rows')) {
+    state = object;
+}
+
+
 const root = document.getElementById('dest');
 m.mount(root, Main);
