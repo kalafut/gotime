@@ -30,36 +30,18 @@ function EndRow() {
                 endTime = renderTime(end);
             }
 
-            return m('div.columns', [
-                m('div.column.col-6',
+            return m('tr', [
+                m('td', endTime),
+                m('td',
                     m('input', {
                         oninput: (e)=>{state.endLabel = e.target.value.trim()},
                         value: state.endLabel,
                     })
                 ),
-                m('div.column.col-4',
-                    m('input', {oninput: (e)=>{handleUpdate(e)}, value: state.endTime}),
+                m('td',
+                    //    m('input', {oninput: (e)=>{handleUpdate(e)}, value: state.endTime}),
                 ),
-                m('div.span.col-2', endTime),
-            ]
-            );
-        }
-    }
-}
-
-function TimeRow() {
-    return {
-        view: (vnode) => {
-            return m('div.columns', [
-                m('div.column.col-6',
-                    m('input', {value: ""})
-                ),
-                m('div.column.col-4',
-                    m('input', {value: ""})
-                ),
-                m('div.span.col-2', renderTime(Arrive)),
-            ]
-            );
+            ]);
         }
     }
 }
@@ -79,20 +61,22 @@ function DurationRow() {
                 timeStr = renderTime(vnode.attrs.end - vnode.attrs.total);
             }
 
-            return m('div.columns', [
-                m('div.column.col-6',
+            return m('tr', [
+                m('td', timeStr),
+                m('td',
                     m('input', {
                         oninput: (e)=>{row.label = e.target.value.trim()},
                         value: row.label,
+                        placeholder: 'description',
                     })
                 ),
-                m('div.column.col-4',
+                m('td',
                     m('input', {
                         oninput: (e)=>{row.duration = e.target.value.trim()},
                         value: row.duration,
+                        placeholder: 'duration',
                     })
                 ),
-                m('div.span.col-2', timeStr),
             ]
             );
         }
@@ -102,8 +86,8 @@ function DurationRow() {
 function Add() {
     return {
         view: (vnode) => {
-            return m('div.columns',
-                m('div.column.col-12',
+            return m('tr',
+                m('td',
                     m('button.p-centered', {
                         onclick() {
                             state.rows.splice(vnode.attrs.row, 0, {
@@ -169,7 +153,7 @@ function Main() {
             }
 
             rows.unshift(m(URL));
-            return rows;
+            return m('columns', m('div.column.col-6', m('table.table', m('tbody', rows))));
         }
     }
 }
