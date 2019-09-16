@@ -1,9 +1,7 @@
-let Arrive = 540 + 50;
-
 let state = {
     v: 1,
     rows: [],
-    endLabel: "",
+    endLabel: "End",
     endTime: "9:00",
 };
 
@@ -31,16 +29,29 @@ function EndRow() {
             }
 
             return m('tr', [
-                m('td', endTime),
+                m('td',
+                    m('button.p-centered', {
+                        onclick() {
+                            state.rows.splice(vnode.attrs.row, 0, {
+                                "label": "",
+                                "duration": "",
+                            });
+                        }
+                    }, '+'),
+                ),
+                m('td',
+                    m('input', {
+                        value: state.endTime,
+                        oninput: (e)=>{handleUpdate(e)},
+                    }),
+                ),
                 m('td',
                     m('input', {
                         oninput: (e)=>{state.endLabel = e.target.value.trim()},
                         value: state.endLabel,
                     })
                 ),
-                m('td',
-                    //    m('input', {oninput: (e)=>{handleUpdate(e)}, value: state.endTime}),
-                ),
+                m('td'),
             ]);
         }
     }
@@ -54,7 +65,7 @@ function DurationRow() {
 
     return {
         view: (vnode) => {
-            let row = vnode.attrs.row;
+            let row = state.rows[vnode.attrs.row];
 
             let timeStr = '';
             if (vnode.attrs.end >= 0) {
@@ -62,10 +73,20 @@ function DurationRow() {
             }
 
             return m('tr', [
+                    m('td',
+                        m('button.p-centered', {
+                            onclick() {
+                                state.rows.splice(vnode.attrs.row, 0, {
+                                    "label": "",
+                                    "duration": "",
+                                });
+                            }
+                        }, '+'),
+                    ),
                 m('td', timeStr),
                 m('td',
                     m('input', {
-                        oninput: (e)=>{row.label = e.target.value.trim()},
+                        oninput: (e)=>{row.label = e.target.value;},
                         value: row.label,
                         placeholder: 'description',
                     })
@@ -78,25 +99,6 @@ function DurationRow() {
                     })
                 ),
             ]
-            );
-        }
-    }
-}
-
-function Add() {
-    return {
-        view: (vnode) => {
-            return m('tr',
-                m('td',
-                    m('button.p-centered', {
-                        onclick() {
-                            state.rows.splice(vnode.attrs.row, 0, {
-                                "label": "",
-                                "duration": "",
-                            });
-                        }
-                    }, '+')
-                ),
             );
         }
     }
@@ -120,7 +122,6 @@ function Main() {
     return {
         onupdate: () => {
             let s = m.buildQueryString(state);
-            console.log(s);
         },
 
         view: () => {
@@ -139,8 +140,8 @@ function Main() {
                 total = 0;
             }
 
-            rows.push(m(Add, {row: state.rows.length}));
-            rows.push(m(EndRow, {endTime: end}));
+            //rows.push(m(Add, {row: state.rows.length}));
+            rows.push(m(EndRow, {row: state.rows.length, endTime: end}));
 
             for (let i=state.rows.length-1; i >= 0; i--) {
                 let r = state.rows[i];
@@ -148,8 +149,8 @@ function Main() {
                 if (end >= 0 && !isNaN(duration)) {
                     total += duration;
                 }
-                rows.unshift(m(DurationRow, {row: state.rows[i], total: total, end: end}));
-                rows.unshift(m(Add, {row: i}));
+                rows.unshift(m(DurationRow, {row: i, total: total, end: end}));
+                //rows.unshift(m(Add, {row: i}));
             }
 
             rows.unshift(m(URL));
