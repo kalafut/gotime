@@ -153,8 +153,19 @@ function Main() {
                 //rows.unshift(m(Add, {row: i}));
             }
 
-            rows.unshift(m(URL));
-            return m('columns', m('div.column.col-6', m('table.table', m('tbody', rows))));
+            rows.push(m(URL));
+            const table = m('table.table', [
+                m('thead',
+                    m('tr', [
+                        m('th'),
+                        m('th', 'Time'),
+                        m('th', 'Description'),
+                        m('th', 'Duration'),
+                    ])
+                ),
+                m('tbody', rows)
+            ]);
+            return m('columns', m('div.column.col-6', table));
         }
     }
 }
