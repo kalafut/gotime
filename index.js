@@ -16,19 +16,27 @@ function renderTime(s) {
     return `${h}:${mStr}`;
 }
 
-function EndRow() {
+function DurationRow() {
     function handleUpdate(e, row) {
+        let entry = e.target.value.trim();
+        row.duration = entry;
         state.endTime = e.target.value.trim();
     }
+    function handleUpdate2(e, row) {
+        state.endTime = e.target.value.trim();
+    }
+
     return {
         view: (vnode) => {
-            let end = vnode.attrs.endTime;
-            let endTime = '';
-            if (end >= 0) {
-                endTime = renderTime(end);
+            let last = (vnode.attrs.row >= state.rows.length);
+            let row = state.rows[vnode.attrs.row];
+
+            let timeStr = state.endTime;
+            if (vnode.attrs.end >= 0) {
+                timeStr = renderTime(vnode.attrs.end - vnode.attrs.total);
             }
 
-            return m('tr', [
+            let cols = [
                 m('td',
                     m('button.p-centered', {
                         onclick() {
@@ -38,68 +46,41 @@ function EndRow() {
                             });
                         }
                     }, '+'),
-                ),
-                m('td',
+                )];
+            if (last) {
+                cols.push(m('td',
                     m('input', {
                         value: state.endTime,
-                        oninput: (e)=>{handleUpdate(e)},
+                        oninput: (e)=>{handleUpdate2(e)},
                     }),
-                ),
-                m('td',
-                    m('input', {
-                        oninput: (e)=>{state.endLabel = e.target.value.trim()},
-                        value: state.endLabel,
-                    })
-                ),
-                m('td'),
-            ]);
-        }
-    }
-}
-
-function DurationRow() {
-    function handleUpdate(e, row) {
-        let entry = e.target.value.trim();
-        row.duration = entry;
-    }
-
-    return {
-        view: (vnode) => {
-            let row = state.rows[vnode.attrs.row];
-
-            let timeStr = '';
-            if (vnode.attrs.end >= 0) {
-                timeStr = renderTime(vnode.attrs.end - vnode.attrs.total);
+                ));
+            } else {
+                cols.push(m('td', timeStr));
             }
-
-            return m('tr', [
-                    m('td',
-                        m('button.p-centered', {
-                            onclick() {
-                                state.rows.splice(vnode.attrs.row, 0, {
-                                    "label": "",
-                                    "duration": "",
-                                });
-                            }
-                        }, '+'),
-                    ),
-                m('td', timeStr),
+            cols = cols.concat([
                 m('td',
                     m('input', {
-                        oninput: (e)=>{row.label = e.target.value;},
-                        value: row.label,
+                        oninput: (e)=>{
+                            let v = e.target.value;
+                            if (last) {
+                                state.endLabel = v;
+                            } else {
+                                row.label = v;
+                            }
+                        },
+                        value: last ? state.endLabel : row.label,
                         placeholder: 'description',
                     })
                 ),
-                m('td',
+                last ? null : m('td',
                     m('input', {
                         oninput: (e)=>{row.duration = e.target.value.trim()},
                         value: row.duration,
                         placeholder: 'duration',
                     })
                 ),
-            ]
-            );
+            ]);
+            return m('tr', cols);
         }
     }
 }
@@ -140,8 +121,7 @@ function Main() {
                 total = 0;
             }
 
-            //rows.push(m(Add, {row: state.rows.length}));
-            rows.push(m(EndRow, {row: state.rows.length, endTime: end}));
+            rows.push(m(DurationRow, {row: state.rows.length}));
 
             for (let i=state.rows.length-1; i >= 0; i--) {
                 let r = state.rows[i];
@@ -150,7 +130,6 @@ function Main() {
                     total += duration;
                 }
                 rows.unshift(m(DurationRow, {row: i, total: total, end: end}));
-                //rows.unshift(m(Add, {row: i}));
             }
 
             rows.push(m(URL));
@@ -160,7 +139,7 @@ function Main() {
                         m('th'),
                         m('th', 'Time'),
                         m('th', 'Description'),
-                        m('th', 'Duration'),
+                        m('th', 'Duration (minutes)'),
                     ])
                 ),
                 m('tbody', rows)
