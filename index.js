@@ -36,17 +36,30 @@ function DurationRow() {
                 timeStr = renderTime(vnode.attrs.end - vnode.attrs.total);
             }
 
-            let cols = [
+            let cols = [];
+            if (!last) {
+                cols.push(m('td',
+                    m('span', {
+                        onclick() {
+                            state.rows.splice(vnode.attrs.row, 1);
+                        }
+                    }, '✕'),
+                ));
+            } else {
+                cols.push(m('td'));
+            }
+            cols.push(
                 m('td',
-                    m('button.p-centered', {
+                    m('span', {
                         onclick() {
                             state.rows.splice(vnode.attrs.row, 0, {
                                 "label": "",
                                 "duration": "",
                             });
                         }
-                    }, '+'),
-                )];
+                    }, '▲'),
+                ),
+            );
             if (last) {
                 cols.push(m('td',
                     m('input', {
@@ -69,14 +82,12 @@ function DurationRow() {
                             }
                         },
                         value: last ? state.endLabel : row.label,
-                        placeholder: 'description',
                     })
                 ),
                 last ? null : m('td',
                     m('input', {
                         oninput: (e)=>{row.duration = e.target.value.trim()},
                         value: row.duration,
-                        placeholder: 'duration',
                     })
                 ),
             ]);
@@ -136,6 +147,7 @@ function Main() {
             const table = m('table.table', [
                 m('thead',
                     m('tr', [
+                        m('th'),
                         m('th'),
                         m('th', 'Time'),
                         m('th', 'Description'),
