@@ -10,14 +10,27 @@ function defaults() {
 let state = defaults;
 
 function renderTime(s) {
+    let d = 0
     let h = Math.floor(s / 60);
     let m = s % 60;
+
+    if (h < 0) {
+        d = Math.floor(-h / 24) + 1;
+        // TODO: days
+        h += d*24;
+    }
+    m += (m < 0) ? 60 : 0;
+
     let mStr = m.toString();
     if (mStr.length < 2) {
         mStr = '0' + mStr;
     }
+    let str = `${h}:${mStr}`;
+    if (d > 0) {
+        str += ` (-${d} day${d > 1 ? 's': ''})`;
+    }
 
-    return `${h}:${mStr}`;
+    return str;
 }
 
 function DurationRow() {
