@@ -1,9 +1,13 @@
-let state = {
-    v: 1,
-    rows: [],
-    endLabel: "End",
-    endTime: "9:00",
+function defaults() {
+    return {
+        v: 1,
+        rows: [],
+        endLabel: "End",
+        endTime: "9:00",
+    }
 };
+
+let state = defaults;
 
 function renderTime(s) {
     let h = Math.floor(s / 60);
@@ -31,8 +35,11 @@ function DurationRow() {
             let last = (vnode.attrs.row >= state.rows.length);
             let row = state.rows[vnode.attrs.row];
 
-            let timeStr = state.endTime;
-            if (vnode.attrs.end >= 0) {
+            let timeStr ='';
+
+            if (last) {
+                timeStr = state.endTime;
+            } else if (vnode.attrs.end >= 0) {
                 timeStr = renderTime(vnode.attrs.end - vnode.attrs.total);
             }
 
@@ -144,6 +151,11 @@ function Main() {
             }
 
             rows.push(m(URL));
+            rows.push(m('button', {
+                onclick() {
+                    state = defaults();
+                }
+            }, 'Clear'));
             const table = m('table.table', [
                 m('thead',
                     m('tr', [
