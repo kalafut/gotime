@@ -14,9 +14,9 @@ function renderTime(s) {
     let h = Math.floor(s / 60);
     let m = s % 60;
 
+    // handle wrapping into previous day(s)
     if (h < 0) {
         d = Math.floor(-h / 24) + 1;
-        // TODO: days
         h += d*24;
     }
     m += (m < 0) ? 60 : 0;
@@ -181,7 +181,7 @@ function Main() {
                 ),
                 m('tbody', rows)
             ]);
-            return m('columns', m('div.column.col-6', table));
+            return table;
         }
     }
 }
