@@ -7,7 +7,7 @@ function defaults() {
     }
 };
 
-let state = defaults;
+let state = defaults();
 
 function renderTime(s) {
     let d = 0
