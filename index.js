@@ -83,6 +83,7 @@ function DurationRow() {
             if (last) {
                 cols.push(m('td',
                     m('input', {
+                        type: 'text',
                         value: state.endTime,
                         oninput: (e)=>{handleUpdate2(e)},
                     }),
@@ -93,6 +94,7 @@ function DurationRow() {
             cols = cols.concat([
                 m('td',
                     m('input', {
+                        type: 'text',
                         oninput: (e)=>{
                             let v = e.target.value;
                             if (last) {
@@ -120,11 +122,7 @@ function URL() {
     return {
         view: (vnode) => {
             let url = window.location.pathname + '?' + m.buildQueryString(state);
-            return m('div.columns',
-                m('div.column.col-12',
-                    m('a', {href: url}, 'Link')
-                )
-            );
+            return m('a', {href: url}, 'Link');
         }
     }
 }
@@ -163,12 +161,6 @@ function Main() {
                 rows.unshift(m(DurationRow, {row: i, total: total, end: end}));
             }
 
-            rows.push(m(URL));
-            rows.push(m('button', {
-                onclick() {
-                    state = defaults();
-                }
-            }, 'Clear'));
             const table = m('table.table', [
                 m('thead',
                     m('tr', [
@@ -176,12 +168,20 @@ function Main() {
                         m('th'),
                         m('th', 'Time'),
                         m('th', 'Description'),
-                        m('th', 'Duration (minutes)'),
+                        m('th', 'Duration'),
                     ])
                 ),
                 m('tbody', rows)
             ]);
-            return table;
+            return m('div', [
+                table,
+                m(URL),
+                m('button', {
+                    onclick() {
+                        state = defaults();
+                    }
+                }, 'Clear'),
+            ]);
         }
     }
 }
