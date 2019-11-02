@@ -49,6 +49,7 @@ function DurationRow() {
             let row = state.rows[vnode.attrs.row];
 
             let timeStr ='';
+            let cols = [];
 
             if (last) {
                 timeStr = state.endTime;
@@ -56,42 +57,38 @@ function DurationRow() {
                 timeStr = renderTime(vnode.attrs.end - vnode.attrs.total);
             }
 
-            let cols = [];
             if (!last) {
                 cols.push(m('td',
-                    m('span', {
+                    m('span.delete', {
                         onclick() {
                             state.rows.splice(vnode.attrs.row, 1);
                         }
-                    }, '✕'),
+                    }, '+'),
+                    m('span','  /  '),
+                    m('span.delete', {
+                        onclick() {
+                            state.rows.splice(vnode.attrs.row, 1);
+                        }
+                    }, '-'),
                 ));
             } else {
                 cols.push(m('td'));
             }
+            //cols.push(
+            //    m('td',
+            //        m('span', {
+            //            onclick() {
+            //                state.rows.splice(vnode.attrs.row, 0, {
+            //                    "label": "",
+            //                    "duration": "",
+            //                });
+            //            }
+            //        }, 'Ins'),
+            //    ),
+            //);
+
+            // Description
             cols.push(
-                m('td',
-                    m('span', {
-                        onclick() {
-                            state.rows.splice(vnode.attrs.row, 0, {
-                                "label": "",
-                                "duration": "",
-                            });
-                        }
-                    }, '▲'),
-                ),
-            );
-            if (last) {
-                cols.push(m('td',
-                    m('input', {
-                        type: 'text',
-                        value: state.endTime,
-                        oninput: (e)=>{handleUpdate2(e)},
-                    }),
-                ));
-            } else {
-                cols.push(m('td', timeStr));
-            }
-            cols = cols.concat([
                 m('td',
                     m('input', {
                         type: 'text',
@@ -105,14 +102,31 @@ function DurationRow() {
                         },
                         value: last ? state.endLabel : row.label,
                     })
-                ),
-                last ? null : m('td',
+                )
+            );
+
+            // Duration
+            cols.push(
+                last ? m('td') : m('td.duration',
                     m('input', {
                         oninput: (e)=>{row.duration = e.target.value.trim()},
                         value: row.duration,
                     })
-                ),
-            ]);
+                )
+            );
+
+            // Time
+            if (last) {
+                cols.push(m('td.time',
+                    m('input.time', {
+                        type: 'text',
+                        value: state.endTime,
+                        oninput: (e)=>{handleUpdate2(e)},
+                    }),
+                ));
+            } else {
+                cols.push(m('td.time', m('span.time-text',timeStr)));
+            }
             return m('tr', cols);
         }
     }
@@ -123,6 +137,14 @@ function URL() {
         view: (vnode) => {
             let url = window.location.pathname + '?' + m.buildQueryString(state);
             return m('a', {href: url}, 'Link');
+        }
+    }
+}
+
+function AddRow() {
+    return {
+        view: (vnode) => {
+            return m('tr',m('td.add-row', {colspan: 5}, '+'));
         }
     }
 }
@@ -159,16 +181,16 @@ function Main() {
                     total += duration;
                 }
                 rows.unshift(m(DurationRow, {row: i, total: total, end: end}));
+                //rows.unshift(m(AddRow));
             }
 
             const table = m('table.table', [
                 m('thead',
                     m('tr', [
                         m('th'),
-                        m('th'),
+                        m('th.description', 'Description'),
+                        m('th.duration', 'Duration'),
                         m('th', 'Time'),
-                        m('th', 'Description'),
-                        m('th', 'Duration'),
                     ])
                 ),
                 m('tbody', rows)
