@@ -2,6 +2,7 @@ function defaults() {
     return {
         v: 1,
         rows: [],
+        startLabel: "Start",
         endLabel: "End",
         endTime: "09:00",
     }
@@ -39,41 +40,45 @@ function DurationRow() {
         row.duration = entry;
         state.endTime = e.target.value.trim();
     }
+
     function handleUpdate2(e, row) {
         state.endTime = e.target.value.trim();
     }
 
     return {
         view: (vnode) => {
-            let last = (vnode.attrs.row >= state.rows.length);
+            const first = (vnode.attrs.row < 0);
+            const last = (vnode.attrs.row >= state.rows.length);
             let row = state.rows[vnode.attrs.row];
 
             let timeStr ='';
             let cols = [];
 
+            // Prepare time string
             if (last) {
                 timeStr = state.endTime;
             } else if (vnode.attrs.end >= 0) {
                 timeStr = renderTime(vnode.attrs.end - vnode.attrs.total);
             }
 
-            if (!last) {
-                cols.push(m('td',
-                    m('span.delete', {
-                        onclick() {
-                            state.rows.splice(vnode.attrs.row, 1);
-                        }
-                    }, '+'),
-                    m('span','  /  '),
-                    m('span.delete', {
-                        onclick() {
-                            state.rows.splice(vnode.attrs.row, 1);
-                        }
-                    }, '-'),
-                ));
-            } else {
-                cols.push(m('td'));
-            }
+            //if (!last) {
+            //    cols.push(m('td',
+            //        m('span.delete', {
+            //            onclick() {
+            //                state.rows.splice(vnode.attrs.row, 1);
+            //            }
+            //        }, '+'),
+            //        m('span','  /  '),
+            //        m('span.delete', {
+            //            onclick() {
+            //                state.rows.splice(vnode.attrs.row, 1);
+            //            }
+            //        }, '-'),
+            //    ));
+            //} else {
+            //    cols.push(m('td'));
+            //}
+
             //cols.push(
             //    m('td',
             //        m('span', {
@@ -96,40 +101,39 @@ function DurationRow() {
                             let v = e.target.value;
                             if (last) {
                                 state.endLabel = v;
+                            } else if (first) {
+                                state.startLabel = v;
                             } else {
                                 row.label = v;
                             }
                         },
-                        value: last ? state.endLabel : row.label,
+                        value: last ? state.endLabel : (first ? state.startLabel : row.label),
                     })
                 )
             );
 
             // Duration
             cols.push(
-                last ? m('td') : m('td.duration',
+                (first || last) ? m('td') : m('td.duration',
                     m('input', {
                         oninput: (e)=>{row.duration = e.target.value.trim()},
                         value: row.duration,
-                        type: 'number',
+                        type: 'text',
                     })
                 )
             );
 
             // Time
-            console.log(state.endTime);
             if (last) {
                 cols.push(m('td.time',
                     m('input.time', {
                         type: 'text',
-                        //type: 'time',
                         value: state.endTime,
                         oninput: (e)=>{handleUpdate2(e)},
-                        //required: true,
                     }),
                 ));
             } else {
-                cols.push(m('td.time', m('span.time-text',timeStr)));
+                cols.push(m('td.time', m('span.time-text', timeStr)));
             }
             return m('tr', cols);
         }
@@ -148,8 +152,34 @@ function URL() {
 function AddRow() {
     return {
         view: (vnode) => {
+            let add = m('span.edit', {
+                onclick: ()=> {
+                    state.rows.splice(vnode.attrs.row, 0, {
+                        "label": "",
+                        "duration": "",
+                    });
+                },
+            }, '+');
+
+            let del = m('span.edit', {
+                onclick: ()=> {
+                    state.rows.splice(vnode.attrs.row, 1);
+                },
+            }, '-');
             //return m('tr',m('td.add-row', {colspan: 5}, 'Add / Del'));
-            return m('tr',m('td.add-row', {colspan: 5}, '+ / -'));
+            return m('tr',
+                m('td.add-row', {colspan: 5}, [
+                    add,
+                    m('span', '/'),
+                    del,
+                ])
+            );
+            //            onclick() {
+            //                state.rows.splice(vnode.attrs.row, 0, {
+            //                    "label": "",
+            //                    "duration": "",
+            //                });
+            //            }
         }
     }
 }
@@ -177,6 +207,8 @@ function Main() {
                 total = 0;
             }
 
+            // TODO: can I avoid this special case?
+            rows.unshift(m(AddRow, {row: state.rows.length}));
             rows.push(m(DurationRow, {row: state.rows.length}));
 
             for (let i=state.rows.length-1; i >= 0; i--) {
@@ -186,13 +218,13 @@ function Main() {
                     total += duration;
                 }
                 rows.unshift(m(DurationRow, {row: i, total: total, end: end}));
-                rows.unshift(m(AddRow));
+                rows.unshift(m(AddRow, {row: i}));
             }
+            rows.unshift(m(DurationRow, {row: -1, total: total, end: end}));
 
             const table = m('table.table', [
                 m('thead',
                     m('tr', [
-                        m('th'),
                         m('th.description', 'Description'),
                         m('th.duration', 'Duration'),
                         m('th', 'Time'),
