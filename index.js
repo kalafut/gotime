@@ -3,7 +3,7 @@ function defaults() {
         v: 1,
         rows: [],
         endLabel: "End",
-        endTime: "9:00",
+        endTime: "09:00",
     }
 };
 
@@ -111,17 +111,21 @@ function DurationRow() {
                     m('input', {
                         oninput: (e)=>{row.duration = e.target.value.trim()},
                         value: row.duration,
+                        type: 'number',
                     })
                 )
             );
 
             // Time
+            console.log(state.endTime);
             if (last) {
                 cols.push(m('td.time',
                     m('input.time', {
                         type: 'text',
+                        //type: 'time',
                         value: state.endTime,
                         oninput: (e)=>{handleUpdate2(e)},
+                        //required: true,
                     }),
                 ));
             } else {
@@ -144,7 +148,8 @@ function URL() {
 function AddRow() {
     return {
         view: (vnode) => {
-            return m('tr',m('td.add-row', {colspan: 5}, '+'));
+            //return m('tr',m('td.add-row', {colspan: 5}, 'Add / Del'));
+            return m('tr',m('td.add-row', {colspan: 5}, '+ / -'));
         }
     }
 }
@@ -181,7 +186,7 @@ function Main() {
                     total += duration;
                 }
                 rows.unshift(m(DurationRow, {row: i, total: total, end: end}));
-                //rows.unshift(m(AddRow));
+                rows.unshift(m(AddRow));
             }
 
             const table = m('table.table', [
