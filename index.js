@@ -6,7 +6,7 @@ function defaults() {
     rows: [],
     startLabel: 'Start',
     endLabel: 'End',
-    endTime: '09:00',
+    endTime: '9:00',
   };
 }
 
@@ -68,6 +68,30 @@ function DurationRow() {
         label2 = state.endLabel;
       }
 
+      const add = m('span.edit.add.edit-button', {
+        onclick: () => {
+          state.rows.splice(vnode.attrs.row, 0, {
+            label: '',
+            duration: '',
+          });
+        },
+        title: 'Insert row',
+      }, '⊕');
+
+      const del = m('span.edit.delete.edit-button', {
+        onclick: () => {
+          state.rows.splice(vnode.attrs.row, 1);
+        },
+        title: 'Delete row',
+      }, '⊖'); //⊖
+
+      cols.push(
+        m('td', [
+          add,
+          del
+        ])
+      );
+
       cols.push(
         m('td',
           m('input', {
@@ -126,26 +150,27 @@ function URL() {
 function AddRow() {
   return {
     view: (vnode) => {
-      const add = m('span.edit', {
+      const add = m('span.edit.add.edit-button', {
         onclick: () => {
           state.rows.splice(vnode.attrs.row, 0, {
             label: '',
             duration: '',
           });
         },
-      }, '+');
+        title: 'Insert row',
+      }, '⊕');
 
-      const del = m('span.edit', {
+      const del = m('span.edit.del', {
         onclick: () => {
           state.rows.splice(vnode.attrs.row, 1);
         },
-      }, '-');
+        title: 'Delete row',
+      }, 'ⓧ');
 
       return m('tr',
         m('td.add-row', { colspan: 5 }, [
           add,
-          m('span', '/'),
-          del,
+          //del,
         ]));
     },
   };
@@ -171,29 +196,30 @@ function Main() {
       }
 
       // Populate the rows in reverse
-      // TODO: can I avoid this special case?
-      rows.unshift(m(AddRow, { row: state.rows.length }));
-      rows.push(m(DurationRow, { row: state.rows.length }));
+      // TODO: can I avoid these special cases?
+      rows.unshift(m(DurationRow, { row: state.rows.length }));
+      //rows.unshift(m(AddRow, { row: state.rows.length }));
 
       for (let i = state.rows.length - 1; i >= 0; i -= 1) {
         const r = state.rows[i];
         const duration = parseInt(r.duration, 10);
 
+        rows.unshift(m(DurationRow, { row: i, total, end }));
+        //rows.unshift(m(AddRow, { row: i }));
+
         if (end >= 0 && !Number.isNaN(duration)) {
           total += duration;
         }
-
-        rows.unshift(m(DurationRow, { row: i, total, end }));
-        rows.unshift(m(AddRow, { row: i }));
       }
       rows.unshift(m(DurationRow, { row: -1, total, end }));
 
       const table = m('table.table', [
         m('thead',
           m('tr', [
+            m('th'),
             m('th.description', 'Step'),
-            m('th.duration', 'Duration'),
-            m('th', 'Time'),
+            m('th.duration', 'Length'),
+            m('th.time', 'Time'),
           ])),
         m('tbody', rows),
       ]);

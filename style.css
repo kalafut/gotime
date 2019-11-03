@@ -26,39 +26,50 @@ body {
   text-align: center;
 }
 
-span.edit {
-  color: blue;
+.edit-button {
+  font-size: 1.6em;
+}
+
+.add {
+  color: green;
 }
 
 .delete {
-  color: blue;
+  color: red;
+  margin: 0.3em
 }
 
+th {
+  text-align: left;
+}
 th.duration {
   width: 15%;
 }
 
-.duration, .time {
-  padding-left: 3em;
+.time {
+  _padding-left: 3em;
+  text-align: right;
 }
 
 .time {
-  vertical-align: top;
+  vertical-align: middle;
   width: 20%;
 }
 
 .start-time-text {
-  background-color: #565656;
-  color: #ffff2e;
-  padding: 0.5em;
+  _background-color: #0000ff;
+  _color: #ffffff;
+  _padding: 0.5em;
   border-radius: 5px;
+  font-weight: bold;
 }
 
 .time-text {
   _background-color: #565656;
-  color: DimGrey;
-  padding: 0.5em;
+  color: #5d5c5c;
+  _padding: 0.5em;
   border-radius: 5px;
+
 }
 
 th {
@@ -73,13 +84,6 @@ hr {
 
 input[type='number'],
 input[type='text'],
-input[type='url'],
-input[type='color'],
-input[type='date'],
-input[type='month'],
-input[type='week'],
-input[type='datetime'],
-input[type='datetime-local'],
 input:not([type]),
 textarea,
 select {
@@ -103,10 +107,13 @@ select {
 input.time {
   _border: none;
   _border-bottom: 1px solid #000000;
-  padding: 8px;
+  _padding: 8px;
 
   _background-color: #565656;
   _color: #ffff2e;
+  _border-color: red;
+  min-width: 3em;
+  font-weight: bold;
 }
 
 input[type='email']:focus,
@@ -129,25 +136,6 @@ select:focus {
   outline: 0;
 }
 
-select {
-  background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" height="14" viewBox="0 0 29 14" width="29"><path fill="%23d1d1d1" d="M9.37727 3.625l5.08154 6.93523L19.54036 3.625"/></svg>') center right no-repeat;
-  padding-right: 3.0rem;
-}
-
-select:focus {
-  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" height="14" viewBox="0 0 29 14" width="29"><path fill="%239b4dca" d="M9.37727 3.625l5.08154 6.93523L19.54036 3.625"/></svg>');
-}
-
-input[type='checkbox'],
-input[type='radio'] {
-  display: inline;
-}
-
-.label-inline {
-  display: inline-block;
-  font-weight: normal;
-  margin-left: .5rem;
-}
 
 .container {
   margin: 0 auto;
@@ -189,6 +177,7 @@ ul {
   padding-left: 0;
 }
 
+/*
 dl dl,
 dl ol,
 dl ul,
@@ -209,6 +198,7 @@ ol {
 ul {
   list-style: circle inside;
 }
+*/
 
 .button,
 button,
@@ -222,17 +212,19 @@ fieldset,
 input,
 select,
 textarea {
-  margin-bottom: 1.5rem;
+  margin-bottom: 0.5rem;
+  margin-top: 0.5rem;
 }
 
 table,
 ul {
   margin-bottom: 2.5rem;
+  padding-bottom: 2.5rem;
 }
 
 table {
   border-spacing: 0;
-  width: 85%;
+  _width: 85%;
   margin: auto;
 }
 
