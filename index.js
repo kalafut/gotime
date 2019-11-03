@@ -37,12 +37,6 @@ function renderTime(s) {
 }
 
 function DurationRow() {
-  // function handleUpdate(e, row) {
-  //   const entry = e.target.value.trim();
-  //   row.duration = entry;
-  //   state.endTime = e.target.value.trim();
-  // }
-
   function handleUpdate2(e) {
     state.endTime = e.target.value.trim();
   }
@@ -62,37 +56,6 @@ function DurationRow() {
       } else if (vnode.attrs.end >= 0) {
         timeStr = renderTime(vnode.attrs.end - vnode.attrs.total);
       }
-
-      // if (!last) {
-      //    cols.push(m('td',
-      //        m('span.delete', {
-      //            onclick() {
-      //                state.rows.splice(vnode.attrs.row, 1);
-      //            }
-      //        }, '+'),
-      //        m('span','  /  '),
-      //        m('span.delete', {
-      //            onclick() {
-      //                state.rows.splice(vnode.attrs.row, 1);
-      //            }
-      //        }, '-'),
-      //    ));
-      // } else {
-      //    cols.push(m('td'));
-      // }
-
-      // cols.push(
-      //    m('td',
-      //        m('span', {
-      //            onclick() {
-      //                state.rows.splice(vnode.attrs.row, 0, {
-      //                    "label": "",
-      //                    "duration": "",
-      //                });
-      //            }
-      //        }, 'Ins'),
-      //    ),
-      // );
 
       // Description
       let label2 = '';
@@ -142,7 +105,9 @@ function DurationRow() {
             oninput: (e) => { handleUpdate2(e); },
           })));
       } else {
-        cols.push(m('td.time', m('span.time-text', timeStr)));
+        cols.push(m('td.time',
+          m('span', { class: first ? 'start-time-text': 'time-text' }, timeStr))
+        );
       }
       return m('tr', cols);
     },
@@ -175,19 +140,13 @@ function AddRow() {
           state.rows.splice(vnode.attrs.row, 1);
         },
       }, '-');
-      // return m('tr',m('td.add-row', {colspan: 5}, 'Add / Del'));
+
       return m('tr',
         m('td.add-row', { colspan: 5 }, [
           add,
           m('span', '/'),
           del,
         ]));
-      //            onclick() {
-      //                state.rows.splice(vnode.attrs.row, 0, {
-      //                    "label": "",
-      //                    "duration": "",
-      //                });
-      //            }
     },
   };
 }
@@ -195,10 +154,6 @@ function AddRow() {
 
 function Main() {
   return {
-    // onupdate: () => {
-    //   const s = m.buildQueryString(state);
-    // },
-
     view: () => {
       const rows = [];
       let total = -1;
@@ -215,6 +170,7 @@ function Main() {
         total = 0;
       }
 
+      // Populate the rows in reverse
       // TODO: can I avoid this special case?
       rows.unshift(m(AddRow, { row: state.rows.length }));
       rows.push(m(DurationRow, { row: state.rows.length }));
@@ -222,9 +178,11 @@ function Main() {
       for (let i = state.rows.length - 1; i >= 0; i -= 1) {
         const r = state.rows[i];
         const duration = parseInt(r.duration, 10);
+
         if (end >= 0 && !Number.isNaN(duration)) {
           total += duration;
         }
+
         rows.unshift(m(DurationRow, { row: i, total, end }));
         rows.unshift(m(AddRow, { row: i }));
       }
@@ -233,7 +191,7 @@ function Main() {
       const table = m('table.table', [
         m('thead',
           m('tr', [
-            m('th.description', 'Description'),
+            m('th.description', 'Step'),
             m('th.duration', 'Duration'),
             m('th', 'Time'),
           ])),

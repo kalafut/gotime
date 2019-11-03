@@ -47,14 +47,23 @@ th.duration {
   width: 20%;
 }
 
-.time-text {
+.start-time-text {
   background-color: #565656;
   color: #ffff2e;
   padding: 0.5em;
   border-radius: 5px;
 }
 
+.time-text {
+  _background-color: #565656;
+  color: DimGrey;
+  padding: 0.5em;
+  border-radius: 5px;
+}
 
+th {
+  padding-bottom: 1em;
+}
 
 hr {
   border: 0;
