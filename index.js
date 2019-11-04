@@ -7,6 +7,7 @@ function defaults() {
     startLabel: 'Start',
     endLabel: 'End',
     endTime: '9:00',
+    jd:false,
   };
 }
 
@@ -83,11 +84,11 @@ function DurationRow() {
           state.rows.splice(vnode.attrs.row, 1);
         },
         title: 'Delete row',
-      }, '⊖'); //⊖
+      }, m.trust('<i class="icon-trash-empty"></i>')); //⊖
 
       cols.push(
         m('td', [
-          add,
+          //add,
           del
         ])
       );
@@ -96,7 +97,38 @@ function DurationRow() {
         m('td',
           m('input', {
             type: 'text',
+            onkeydown: (e) => {
+              console.log(e);
+              if (e.code === "Backspace") {
+                if (e.target.value === '') {
+                  state.rows.splice(vnode.attrs.row, 1);
+                  console.log("Remove row!");
+                  state.jd = true;
+                  return true;
+                }
+              }
+
+              if (e.code === "Enter") {
+                state.rows.splice(vnode.attrs.row + 1, 0, {
+                  label: '',
+                  duration: '',
+                });
+                  return;
+              }
+              const v = e.target.value;
+              if (last) {
+                state.endLabel = v;
+              } else if (first) {
+                state.startLabel = v;
+              } else {
+                row.label = v;
+              }
+            },
             oninput: (e) => {
+              //if (state.jd) {
+              //  state.jd = false;
+              //  return;
+              //}
               const v = e.target.value;
               if (last) {
                 state.endLabel = v;
@@ -116,7 +148,7 @@ function DurationRow() {
           m('input', {
             oninput: (e) => { row.duration = e.target.value.trim(); },
             value: row.duration,
-            type: 'text',
+            type: 'number',
           })),
       );
 

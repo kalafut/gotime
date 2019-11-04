@@ -35,15 +35,17 @@ body {
 }
 
 .delete {
-  color: red;
-  margin: 0.3em
+  _color: red;
+  margin: 0.3em;
+  font-size: 1.2em;
 }
 
 th {
   text-align: left;
 }
+
 th.duration {
-  width: 15%;
+  width: 5em;
 }
 
 .time {
@@ -53,7 +55,7 @@ th.duration {
 
 .time {
   vertical-align: middle;
-  width: 20%;
+  width: 3em;
 }
 
 .start-time-text {
@@ -96,11 +98,16 @@ select {
   box-shadow: none;
   box-sizing: inherit;
   _height: 3.8rem;
-  padding: .6rem 1.0rem;
+
+  padding-top: .6rem;
+  padding-bottom: .6rem;
+  padding-left: 1.0rem;
+  padding-right: 1px;
+
   width: 100%;
   font-size: 1.0em;
 
-  _border: none;
+  border: none;
   _border-bottom: 1px solid #000000;
 }
 
@@ -114,6 +121,7 @@ input.time {
   _border-color: red;
   min-width: 3em;
   font-weight: bold;
+  padding-left: 1px;
 }
 
 input[type='email']:focus,
@@ -169,36 +177,6 @@ a:focus, a:hover {
   color: #606c76;
 }
 
-dl,
-ol,
-ul {
-  list-style: none;
-  margin-top: 0;
-  padding-left: 0;
-}
-
-/*
-dl dl,
-dl ol,
-dl ul,
-ol dl,
-ol ol,
-ol ul,
-ul dl,
-ul ol,
-ul ul {
-  font-size: 90%;
-  margin: 1.5rem 0 1.5rem 3.0rem;
-}
-
-ol {
-  list-style: decimal inside;
-}
-
-ul {
-  list-style: circle inside;
-}
-*/
 
 .button,
 button,
@@ -226,6 +204,11 @@ table {
   border-spacing: 0;
   _width: 85%;
   margin: auto;
+  border-collapse: collapse; 
+}
+tr {
+  border-bottom: 1pt solid black;
+  border-color: LightGrey;
 }
 
 /*
