@@ -31,7 +31,7 @@ function renderTime(s) {
   }
   let str = `${h}:${mStr}`;
   if (d > 0) {
-    str += ` (-${d} day${d > 1 ? 's' : ''})`;
+    str += `<br>(-${d}d)`;
   }
 
   return str;
@@ -162,7 +162,7 @@ function DurationRow() {
           })));
       } else {
         cols.push(m('td.time',
-          m('span', { class: first ? 'start-time-text': 'time-text' }, timeStr))
+          m('span', { class: first ? 'start-time-text': 'time-text' }, m.trust(timeStr)))
         );
       }
       return m('tr', cols);

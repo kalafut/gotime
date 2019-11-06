@@ -35,7 +35,6 @@ body {
 }
 
 .delete {
-  _color: red;
   margin: 0.3em;
   font-size: 1.2em;
 }
@@ -48,12 +47,20 @@ th.duration {
   width: 5em;
 }
 
+/*
+.duration {
+  font-family: monospace;
+  font-size: 1.4em;
+}
+*/
+
 .time {
   _padding-left: 3em;
   text-align: right;
-}
-
-.time {
+  /*
+  font-family: monospace;
+  font-size: 1.4em;
+  */
   vertical-align: middle;
   width: 3em;
 }
@@ -92,7 +99,7 @@ select {
   -webkit-appearance: none;
      -moz-appearance: none;
           appearance: none;
-  background-color: transparent;
+  background-color: #eeeeee;
   border: 0.1rem solid #d1d1d1;
   _border-radius: .4rem;
   box-shadow: none;
@@ -109,6 +116,13 @@ select {
 
   border: none;
   _border-bottom: 1px solid #000000;
+
+  
+  /*
+  font-family: monospace;
+  font-size: 1.4em;
+  */
+
 }
 
 input.time {
@@ -143,6 +157,7 @@ select:focus {
   border-color: #9b4dca;
   outline: 0;
 }
+
 
 
 .container {
