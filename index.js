@@ -8,6 +8,7 @@ function defaults() {
     endLabel: 'End',
     endTime: '9:00',
     jd:false,
+    focus: null,
   };
 }
 
@@ -47,6 +48,7 @@ function DurationRow() {
       const first = (vnode.attrs.row < 0);
       const last = (vnode.attrs.row >= state.rows.length);
       const row = state.rows[vnode.attrs.row];
+      const focus = vnode.attrs.focus;
 
       let timeStr = '';
       const cols = [];
@@ -97,12 +99,15 @@ function DurationRow() {
         m('td',
           m('input', {
             type: 'text',
+            oncreate: (vnode) => {
+              //if (focus) {
+                vnode.dom.focus();
+              //}
+            },
             onkeydown: (e) => {
-              console.log(e);
               if (e.code === "Backspace") {
                 if (e.target.value === '') {
                   state.rows.splice(vnode.attrs.row, 1);
-                  console.log("Remove row!");
                   state.jd = true;
                   return true;
                 }
@@ -113,7 +118,8 @@ function DurationRow() {
                   label: '',
                   duration: '',
                 });
-                  return;
+                state.focus = vnode.attrs.row + 1;
+                return;
               }
               const v = e.target.value;
               if (last) {
@@ -236,7 +242,7 @@ function Main() {
         const r = state.rows[i];
         const duration = parseInt(r.duration, 10);
 
-        rows.unshift(m(DurationRow, { row: i, total, end }));
+        rows.unshift(m(DurationRow, { focus:i == state.focus,row: i, total, end }));
         //rows.unshift(m(AddRow, { row: i }));
 
         if (end >= 0 && !Number.isNaN(duration)) {
