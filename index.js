@@ -5,6 +5,7 @@ function defaults() {
     v: 1,
     rows: [
       {label:'Start', duration: 0, id:nextId()},
+      {label:'', duration: '', id:nextId()},
       {label:'End', duration: 0, id:nextId()},
       ],
     startLabel: 'Start',
@@ -63,6 +64,7 @@ function DurationRow() {
       const last = (vnode.attrs.row >= state.rows.length - 1);
       const firstOrLast = vnode.attrs.row === 0 || last;
       const row = state.rows[vnode.attrs.row];
+      //const allowDelete = !(firstOrLast || vnode.attrs.row == 1);
 
       let timeStr = '';
       const cols = [];
