@@ -7,12 +7,16 @@ function defaults() {
     startLabel: 'Start',
     endLabel: 'End',
     endTime: '9:00',
-    jd:false,
-    focus: null,
   };
 }
 
-let nextId = 1;
+const nextId = (() => {
+  let id = 1;
+  return () => {
+    id += 1;
+    return id
+  }
+})();
 
 let state = defaults();
 
@@ -40,6 +44,14 @@ function renderTime(s) {
   return str;
 }
 
+function newRow(label, duration) {
+  return {
+    label: '',
+    duration: '',
+    id: nextId(),
+  };
+}
+
 function DurationRow() {
   function handleUpdate2(e) {
     state.endTime = e.target.value.trim();
@@ -50,7 +62,6 @@ function DurationRow() {
       const first = (vnode.attrs.row < 0);
       const last = (vnode.attrs.row >= state.rows.length);
       const row = state.rows[vnode.attrs.row];
-      const focus = vnode.attrs.focus;
 
       let timeStr = '';
       const cols = [];
@@ -75,11 +86,7 @@ function DurationRow() {
 
       const add = m('span.edit.add.edit-button', {
         onclick: () => {
-          state.rows.splice(vnode.attrs.row, 0, {
-            label: '',
-            duration: '',
-            id: nextId++,
-          });
+          state.rows.splice(vnode.attrs.row, 0, newRow());
         },
         title: 'Insert row',
       }, '⊕');
@@ -102,19 +109,14 @@ function DurationRow() {
         m('td',
           m('input', {
             type: 'text',
-            oncreate: (vnode) => {
-              if (focus) {
-                vnode.dom.focus();
+            oncreate: (v) => {
+              if (!vnode.attrs.noFocus) {
+                v.dom.focus();
               }
             },
             onkeydown: (e) => {
               if (e.code === "Enter") {
-                state.rows.splice(vnode.attrs.row + 1, 0, {
-                  label: '',
-                  duration: '',
-                  id: nextId++,
-                });
-                state.focus = vnode.attrs.row + 1;
+                state.rows.splice(vnode.attrs.row + 1, 0, newRow());
                 return;
               }
               const v = e.target.value;
@@ -208,7 +210,13 @@ function AddRow() {
 
 
 function Main() {
+  let noFocus = true;
+
   return {
+    oncreate: () => {
+      noFocus = false;
+    },
+
     view: () => {
       const rows = [];
       let total = -1;
@@ -227,8 +235,7 @@ function Main() {
 
       // Populate the rows in reverse
       // TODO: can I avoid these special cases?
-      rows.unshift(m(DurationRow, { key:-1, row: state.rows.length }));
-      //rows.unshift(m(AddRow, { row: state.rows.length }));
+      rows.unshift(m(DurationRow, { key:-1, row: state.rows.length, noFocus }));
 
       for (let i = state.rows.length - 1; i >= 0; i -= 1) {
         const r = state.rows[i];
@@ -239,13 +246,13 @@ function Main() {
           focus = true;
           state.focus = null;
         }
-        rows.unshift(m(DurationRow, { key: r.id, row: i, total, end, focus }));
+        rows.unshift(m(DurationRow, { key: r.id, row: i, total, end, noFocus }));
 
         if (end >= 0 && !Number.isNaN(duration)) {
           total += duration;
         }
       }
-      rows.unshift(m(DurationRow, { key:9999, row: -1, total, end }));
+      rows.unshift(m(DurationRow, { key:9999, row: -1, total, end, noFocus }));
 
       const table = m('table.table', [
         m('thead',
@@ -272,6 +279,9 @@ function Main() {
 
 const object = m.parseQueryString(window.location.search);
 if (Object.prototype.hasOwnProperty.call(object, 'rows')) {
+  for (const row of object.rows) {
+    row.id = nextId();
+  }
   state = object;
 }
 
