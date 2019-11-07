@@ -3,7 +3,10 @@
 function defaults() {
   return {
     v: 1,
-    rows: [],
+    rows: [
+      {label:'Start', duration: 0, id:nextId()},
+      {label:'End', duration: 0, id:nextId()},
+      ],
     startLabel: 'Start',
     endLabel: 'End',
     endTime: '9:00',
@@ -12,11 +15,9 @@ function defaults() {
 
 const nextId = (() => {
   let id = 1;
-  return () => {
-    id += 1;
-    return id
+  return () => id += 1;
   }
-})();
+)();
 
 let state = defaults();
 
@@ -59,8 +60,8 @@ function DurationRow() {
 
   return {
     view: (vnode) => {
-      const first = (vnode.attrs.row < 0);
-      const last = (vnode.attrs.row >= state.rows.length);
+      const last = (vnode.attrs.row >= state.rows.length - 1);
+      const firstOrLast = vnode.attrs.row === 0 || last;
       const row = state.rows[vnode.attrs.row];
 
       let timeStr = '';
@@ -73,38 +74,15 @@ function DurationRow() {
         timeStr = renderTime(vnode.attrs.end - vnode.attrs.total);
       }
 
-      // Description
-      let label2 = '';
-      if (row !== undefined) {
-        label2 = row.label;
-      }
-      if (first) {
-        label2 = state.startLabel;
-      } else if (last) {
-        label2 = state.endLabel;
-      }
-
-      const add = m('span.edit.add.edit-button', {
-        onclick: () => {
-          state.rows.splice(vnode.attrs.row, 0, newRow());
-        },
-        title: 'Insert row',
-      }, '⊕');
-
-      const del = m('span.edit.delete.edit-button', {
-        onclick: () => {
-          state.rows.splice(vnode.attrs.row, 1);
-        },
-        title: 'Delete row',
-      }, m.trust('<i class="icon-trash-empty"></i>')); //⊖
-
+      // Delete
       cols.push(
-        m('td', [
-          //add,
-          del
-        ])
+        m('td', firstOrLast ? null : m('i.icon-trash-empty.delete', {
+          onclick: () => { state.rows.splice(vnode.attrs.row, 1) },
+          title: 'Delete row',
+        }))
       );
 
+      // Step description
       cols.push(
         m('td',
           m('input', {
@@ -115,41 +93,32 @@ function DurationRow() {
               }
             },
             onkeydown: (e) => {
-              if (e.code === "Enter") {
+              if (!last && e.code === "Enter") {
                 state.rows.splice(vnode.attrs.row + 1, 0, newRow());
                 return;
               }
-              const v = e.target.value;
-              if (last) {
-                state.endLabel = v;
-              } else if (first) {
-                state.startLabel = v;
-              } else {
-                row.label = v;
-              }
             },
             oninput: (e) => {
-              const v = e.target.value;
-              if (last) {
-                state.endLabel = v;
-              } else if (first) {
-                state.startLabel = v;
-              } else {
-                row.label = v;
-              }
+              row.label = e.target.value;
             },
-            value: label2,
+            value: row.label,
           })),
       );
 
       // Duration
       cols.push(
-        (first || last) ? m('td') : m('td.duration',
-          m('input', {
+        m('td.duration',
+          !firstOrLast ? m('input', {
+            onkeydown: (e) => {
+              if (e.code === "Enter") {
+                state.rows.splice(vnode.attrs.row + 1, 0, newRow());
+                return;
+              }
+            },
             oninput: (e) => { row.duration = e.target.value.trim(); },
             value: row.duration,
             type: 'number',
-          })),
+          }) : null)
       );
 
       // Time
@@ -162,7 +131,7 @@ function DurationRow() {
           })));
       } else {
         cols.push(m('td.time',
-          m('span', { class: first ? 'start-time-text': 'time-text' }, m.trust(timeStr)))
+          m('span', { class: firstOrLast ? 'start-time-text': 'time-text' }, m.trust(timeStr)))
         );
       }
       return m('tr', cols);
@@ -175,35 +144,6 @@ function URL() {
     view: () => {
       const url = `${window.location.pathname}?${m.buildQueryString(state)}`;
       return m('a', { href: url }, 'Link');
-    },
-  };
-}
-
-function AddRow() {
-  return {
-    view: (vnode) => {
-      const add = m('span.edit.add.edit-button', {
-        onclick: () => {
-          state.rows.splice(vnode.attrs.row, 0, {
-            label: '',
-            duration: '',
-          });
-        },
-        title: 'Insert row',
-      }, '⊕');
-
-      const del = m('span.edit.del', {
-        onclick: () => {
-          state.rows.splice(vnode.attrs.row, 1);
-        },
-        title: 'Delete row',
-      }, 'ⓧ');
-
-      return m('tr',
-        m('td.add-row', { colspan: 5 }, [
-          add,
-          //del,
-        ]));
     },
   };
 }
@@ -234,25 +174,16 @@ function Main() {
       }
 
       // Populate the rows in reverse
-      // TODO: can I avoid these special cases?
-      rows.unshift(m(DurationRow, { key:-1, row: state.rows.length, noFocus }));
-
       for (let i = state.rows.length - 1; i >= 0; i -= 1) {
-        const r = state.rows[i];
-        const duration = parseInt(r.duration, 10);
+        const row = state.rows[i];
+        const duration = parseInt(row.duration, 10);
 
-        let focus = false;
-        if (i === state.focus) {
-          focus = true;
-          state.focus = null;
-        }
-        rows.unshift(m(DurationRow, { key: r.id, row: i, total, end, noFocus }));
+        rows.unshift(m(DurationRow, { key: row.id, row: i, total, end, noFocus }));
 
         if (end >= 0 && !Number.isNaN(duration)) {
           total += duration;
         }
       }
-      rows.unshift(m(DurationRow, { key:9999, row: -1, total, end, noFocus }));
 
       const table = m('table.table', [
         m('thead',
