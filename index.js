@@ -103,19 +103,11 @@ function DurationRow() {
           m('input', {
             type: 'text',
             oncreate: (vnode) => {
-              //if (focus) {
+              if (focus) {
                 vnode.dom.focus();
-              //}
+              }
             },
             onkeydown: (e) => {
-              if (e.code === "Backspace") {
-                if (e.target.value === '') {
-                  state.rows.splice(vnode.attrs.row, 1);
-                  state.jd = true;
-                  return true;
-                }
-              }
-
               if (e.code === "Enter") {
                 state.rows.splice(vnode.attrs.row + 1, 0, {
                   label: '',
@@ -135,10 +127,6 @@ function DurationRow() {
               }
             },
             oninput: (e) => {
-              //if (state.jd) {
-              //  state.jd = false;
-              //  return;
-              //}
               const v = e.target.value;
               if (last) {
                 state.endLabel = v;
@@ -246,8 +234,12 @@ function Main() {
         const r = state.rows[i];
         const duration = parseInt(r.duration, 10);
 
-        rows.unshift(m(DurationRow, { key: r.id,  focus:i == state.focus,row: i, total, end }));
-        //rows.unshift(m(AddRow, { row: i }));
+        let focus = false;
+        if (i === state.focus) {
+          focus = true;
+          state.focus = null;
+        }
+        rows.unshift(m(DurationRow, { key: r.id, row: i, total, end, focus }));
 
         if (end >= 0 && !Number.isNaN(duration)) {
           total += duration;
