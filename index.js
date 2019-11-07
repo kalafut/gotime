@@ -12,6 +12,8 @@ function defaults() {
   };
 }
 
+let nextId = 1;
+
 let state = defaults();
 
 function renderTime(s) {
@@ -76,6 +78,7 @@ function DurationRow() {
           state.rows.splice(vnode.attrs.row, 0, {
             label: '',
             duration: '',
+            id: nextId++,
           });
         },
         title: 'Insert row',
@@ -117,6 +120,7 @@ function DurationRow() {
                 state.rows.splice(vnode.attrs.row + 1, 0, {
                   label: '',
                   duration: '',
+                  id: nextId++,
                 });
                 state.focus = vnode.attrs.row + 1;
                 return;
@@ -235,21 +239,21 @@ function Main() {
 
       // Populate the rows in reverse
       // TODO: can I avoid these special cases?
-      rows.unshift(m(DurationRow, { row: state.rows.length }));
+      rows.unshift(m(DurationRow, { key:-1, row: state.rows.length }));
       //rows.unshift(m(AddRow, { row: state.rows.length }));
 
       for (let i = state.rows.length - 1; i >= 0; i -= 1) {
         const r = state.rows[i];
         const duration = parseInt(r.duration, 10);
 
-        rows.unshift(m(DurationRow, { focus:i == state.focus,row: i, total, end }));
+        rows.unshift(m(DurationRow, { key: r.id,  focus:i == state.focus,row: i, total, end }));
         //rows.unshift(m(AddRow, { row: i }));
 
         if (end >= 0 && !Number.isNaN(duration)) {
           total += duration;
         }
       }
-      rows.unshift(m(DurationRow, { row: -1, total, end }));
+      rows.unshift(m(DurationRow, { key:9999, row: -1, total, end }));
 
       const table = m('table.table', [
         m('thead',
