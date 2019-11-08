@@ -8,8 +8,6 @@ function defaults() {
       {label:'', duration: '', id:nextId()},
       {label:'End', duration: 0, id:nextId()},
       ],
-    startLabel: 'Start',
-    endLabel: 'End',
     endTime: '9:00',
   };
 }
@@ -144,7 +142,13 @@ function DurationRow() {
 function URL() {
   return {
     view: () => {
-      const url = `${window.location.pathname}?${m.buildQueryString(state)}`;
+      let clone = Object.assign({}, state);
+      Object.assign(clone.rows, state.rows);
+      for (const row of clone.rows) {
+        delete(row.id);
+      }
+
+      const url = `${window.location.pathname}?${m.buildQueryString(clone)}`;
       return m('a', { href: url }, 'Link');
     },
   };
@@ -215,6 +219,8 @@ if (Object.prototype.hasOwnProperty.call(object, 'rows')) {
   for (const row of object.rows) {
     row.id = nextId();
   }
+  object.rows[0].duration = 0;
+  object.rows[object.rows.length-1].duration = 0;
   state = object;
 }
 
