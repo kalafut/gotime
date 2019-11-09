@@ -1,22 +1,24 @@
 /* global m */
 
+const nextId = (() => {
+  let id = 1;
+  return () => {
+    id += 1;
+    return id;
+  };
+})();
+
 function defaults() {
   return {
     v: 1,
     rows: [
-      {label:'Start', duration: 0, id:nextId()},
-      {label:'', duration: '', id:nextId()},
-      {label:'End', duration: 0, id:nextId()},
-      ],
+      { label: 'Start', duration: 0, id: nextId() },
+      { label: '', duration: '', id: nextId() },
+      { label: 'End', duration: 0, id: nextId() },
+    ],
     endTime: '9:00',
   };
 }
-
-const nextId = (() => {
-  let id = 1;
-  return () => id += 1;
-  }
-)();
 
 let state = defaults();
 
@@ -142,10 +144,12 @@ function DurationRow() {
 function URL() {
   return {
     view: () => {
-      let clone = Object.assign({}, state);
-      Object.assign(clone.rows, state.rows);
-      for (const row of clone.rows) {
-        delete(row.id);
+      const clone = Object.assign({}, state);
+      clone.rows = [];
+      for (const row of state.rows) {
+        const rClone = Object.assign({}, row);
+        delete rClone.id;
+        clone.rows.push(rClone);
       }
 
       const url = `${window.location.pathname}?${m.buildQueryString(clone)}`;
@@ -206,7 +210,7 @@ function Main() {
         m(URL),
         m('button', {
           onclick() {
-            state = defaults();
+                state = defaults();
           },
         }, 'Clear'),
       ]);
