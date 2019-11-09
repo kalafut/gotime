@@ -46,7 +46,7 @@ function renderTime(s) {
   return str;
 }
 
-function newRow(label, duration) {
+function newRow() {
   return {
     label: '',
     duration: '',
@@ -64,7 +64,7 @@ function DurationRow() {
       const last = (vnode.attrs.row >= state.rows.length - 1);
       const firstOrLast = vnode.attrs.row === 0 || last;
       const row = state.rows[vnode.attrs.row];
-      //const allowDelete = !(firstOrLast || vnode.attrs.row == 1);
+      // const allowDelete = !(firstOrLast || vnode.attrs.row == 1);
 
       let timeStr = '';
       const cols = [];
@@ -79,9 +79,9 @@ function DurationRow() {
       // Delete
       cols.push(
         m('td', firstOrLast ? null : m('i.icon-trash-empty.delete', {
-          onclick: () => { state.rows.splice(vnode.attrs.row, 1) },
+          onclick: () => { state.rows.splice(vnode.attrs.row, 1); },
           title: 'Delete row',
-        }))
+        })),
       );
 
       // Step description
@@ -95,9 +95,8 @@ function DurationRow() {
               }
             },
             onkeydown: (e) => {
-              if (!last && e.code === "Enter") {
+              if (!last && e.code === 'Enter') {
                 state.rows.splice(vnode.attrs.row + 1, 0, newRow());
-                return;
               }
             },
             oninput: (e) => {
@@ -112,15 +111,14 @@ function DurationRow() {
         m('td.duration',
           !firstOrLast ? m('input', {
             onkeydown: (e) => {
-              if (e.code === "Enter") {
+              if (e.code === 'Enter') {
                 state.rows.splice(vnode.attrs.row + 1, 0, newRow());
-                return;
               }
             },
             oninput: (e) => { row.duration = e.target.value.trim(); },
             value: row.duration,
             type: 'number',
-          }) : null)
+          }) : null),
       );
 
       // Time
@@ -133,8 +131,7 @@ function DurationRow() {
           })));
       } else {
         cols.push(m('td.time',
-          m('span', { class: firstOrLast ? 'start-time-text': 'time-text' }, m.trust(timeStr)))
-        );
+          m('span', { class: firstOrLast ? 'start-time-text' : 'time-text' }, m.trust(timeStr))));
       }
       return m('tr', cols);
     },
@@ -188,7 +185,9 @@ function Main() {
         const row = state.rows[i];
         const duration = parseInt(row.duration, 10);
 
-        rows.unshift(m(DurationRow, { key: row.id, row: i, total, end, noFocus }));
+        rows.unshift(m(DurationRow, {
+          key: row.id, row: i, total, end, noFocus,
+        }));
 
         if (end >= 0 && !Number.isNaN(duration)) {
           total += duration;
@@ -210,7 +209,7 @@ function Main() {
         m(URL),
         m('button', {
           onclick() {
-                state = defaults();
+            state = defaults();
           },
         }, 'Clear'),
       ]);
@@ -224,7 +223,7 @@ if (Object.prototype.hasOwnProperty.call(object, 'rows')) {
     row.id = nextId();
   }
   object.rows[0].duration = 0;
-  object.rows[object.rows.length-1].duration = 0;
+  object.rows[object.rows.length - 1].duration = 0;
   state = object;
 }
 
