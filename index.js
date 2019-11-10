@@ -10,7 +10,7 @@ const nextId = (() => {
 
 function defaults() {
   return {
-    v: 1,
+    sv: 1,
     rows: [
       { label: 'Start', duration: 0, id: nextId() },
       { label: '', duration: '', id: nextId() },
