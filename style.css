@@ -191,12 +191,12 @@ select:focus {
 */
 
 a {
-  color: blue;
-  /*text-decoration: none;*/
+  color: #0000ff;
+  text-decoration: none;
 }
 
 a:focus, a:hover {
-  color: #606c76;
+  text-decoration: underline;
 }
 
 
