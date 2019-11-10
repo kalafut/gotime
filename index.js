@@ -116,9 +116,17 @@ function DurationRow() {
                 state.rows.splice(vnode.attrs.row + 1, 0, newRow());
               }
             },
-            oninput: (e) => { row.duration = e.target.value.trim(); },
+            oninput: (e) => {
+              let v = e.target.value.trim();
+              duration = parseInt(v, 10);
+              if (Number.isNaN(duration) || duration < 0) {
+                duration = '';
+              }
+              row.duration = duration;
+            },
             value: row.duration,
             type: 'number',
+            min: 0,
           })
       ));
 
