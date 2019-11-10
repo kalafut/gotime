@@ -17,6 +17,13 @@ body {
   margin: 8px;
 }
 
+img.gh {
+  width: 30px;
+  display: block;
+  margin: auto;
+  margin-top: 5em;
+}
+
 .content {
   max-width: 40em;
   margin: auto;

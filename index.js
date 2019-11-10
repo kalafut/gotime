@@ -138,6 +138,19 @@ function DurationRow() {
   };
 }
 
+function marshalState() {
+  const clone = Object.assign({}, state);
+  clone.rows = [];
+  for (const row of state.rows) {
+    const rClone = Object.assign({}, row);
+    delete rClone.id;
+    clone.rows.push(rClone);
+  }
+
+  const url = `${window.location.pathname}?${m.buildQueryString(clone)}`;
+  return url;
+}
+
 function URL() {
   return {
     view: () => {
@@ -150,7 +163,8 @@ function URL() {
       }
 
       const url = `${window.location.pathname}?${m.buildQueryString(clone)}`;
-      return m('a', { href: url }, 'Link');
+      //return m('a', { href: url }, m.trust('<i class="icon-link"></i>'));
+      return m('a', { href: url,  style: 'padding: 2em'}, 'Permalink');
     },
   };
 }
@@ -194,24 +208,52 @@ function Main() {
         }
       }
 
+      //rows.push(
+      //  m('tr', { key: nextId() },
+      //    m('td', { colspan: 4 },
+      //      m('button', {
+      //        onclick() {
+      //          state = defaults();
+      //        },
+      //      }, 'Reset')
+      //    )
+      //  )
+      //);
+
       const table = m('table.table', [
         m('thead',
           m('tr', [
-            m('th'),
+            m('th',
+              //m('i.icon-trash-empty.delete', {
+              //  onclick() {
+              //    state = defaults();
+              //  }
+              //})
+            ),
             m('th.description', 'Step'),
             m('th.duration', 'Length'),
             m('th.time', 'Time'),
           ])),
         m('tbody', rows),
       ]);
-      return m('div', [
-        table,
-        m(URL),
-        m('button', {
-          onclick() {
-            state = defaults();
-          },
-        }, 'Clear'),
+
+      //history.pushState("", "title", marshalState());
+      return m('div',[
+        m('div', table),
+        m('div', { style: 'text-align: center; margin-top: 2em;' }, [
+          m(URL),
+          //m('span','|'),
+          m('a', { href:"/", style: 'padding: 2em'}, "Reset"),
+        ]),
+
+        /*
+          m('button', {
+            onclick() {
+              state = defaults();
+            },
+          }, 'Reset'),
+
+*/
       ]);
     },
   };
