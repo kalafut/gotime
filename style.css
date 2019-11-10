@@ -17,6 +17,10 @@ body {
   margin: 8px;
 }
 
+.hidden {
+  visibility: hidden;
+}
+
 img.gh {
   width: 30px;
   display: block;

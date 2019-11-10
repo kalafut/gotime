@@ -107,9 +107,10 @@ function DurationRow() {
       );
 
       // Duration
+      let input = !firstOrLast ? 'input' : 'input.hidden';
       cols.push(
         m('td.duration',
-          !firstOrLast ? m('input', {
+          m(input, {
             onkeydown: (e) => {
               if (e.code === 'Enter') {
                 state.rows.splice(vnode.attrs.row + 1, 0, newRow());
@@ -118,8 +119,8 @@ function DurationRow() {
             oninput: (e) => { row.duration = e.target.value.trim(); },
             value: row.duration,
             type: 'number',
-          }) : null),
-      );
+          })
+      ));
 
       // Time
       if (last) {
@@ -224,11 +225,7 @@ function Main() {
         m('thead',
           m('tr', [
             m('th',
-              //m('i.icon-trash-empty.delete', {
-              //  onclick() {
-              //    state = defaults();
-              //  }
-              //})
+              m('i.icon-trash-empty.delete.hidden')
             ),
             m('th.description', 'Step'),
             m('th.duration', 'Length'),
