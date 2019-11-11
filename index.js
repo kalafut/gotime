@@ -12,9 +12,9 @@ function defaults() {
   return {
     sv: 1,
     rows: [
-      { label: 'Start', duration: 0, id: nextId() },
+      { label: '', duration: 0, id: nextId() },
       { label: '', duration: '', id: nextId() },
-      { label: 'End', duration: 0, id: nextId() },
+      { label: '', duration: 0, id: nextId() },
     ],
     endTime: '9:00',
   };
@@ -61,8 +61,9 @@ function DurationRow() {
 
   return {
     view: (vnode) => {
+      const first = vnode.attrs.row === 0;
       const last = (vnode.attrs.row >= state.rows.length - 1);
-      const firstOrLast = vnode.attrs.row === 0 || last;
+      const firstOrLast = first || last;
       const row = state.rows[vnode.attrs.row];
       // const allowDelete = !(firstOrLast || vnode.attrs.row == 1);
 
@@ -85,6 +86,13 @@ function DurationRow() {
       );
 
       // Step description
+      let placeholder = 'Description';
+      if (first) {
+        placeholder = 'Wake up, leave, ...';
+      } else if (last) {
+        placeholder = 'Arrive, board, ...';
+      }
+
       cols.push(
         m('td',
           m('input', {
@@ -103,6 +111,7 @@ function DurationRow() {
               row.label = e.target.value;
             },
             value: row.label,
+            placeholder: placeholder,
           })),
       );
 
