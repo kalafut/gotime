@@ -86,7 +86,7 @@ function DurationRow() {
 
       // Step description
       cols.push(
-        m('td',
+        m('td.description',
           m('input', {
             type: 'text',
             oncreate: (v) => {
@@ -107,7 +107,7 @@ function DurationRow() {
       );
 
       // Duration
-      let input = !firstOrLast ? 'input' : 'input.hidden';
+      let input = !firstOrLast ? 'input.duration' : 'input.hidden';
       cols.push(
         m('td.duration',
           m(input, {
@@ -236,7 +236,7 @@ function Main() {
               m('i.icon-trash-empty.delete.hidden')
             ),
             m('th.description', 'Step'),
-            m('th.duration', 'Length'),
+            m('th.duration', 'Duration'),
             m('th.time', 'Time'),
           ])),
         m('tbody', rows),
