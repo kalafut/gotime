@@ -1,20 +1,27 @@
 /* global m */
 
-const nextId = (() => {
-  let id = 1;
-  return () => {
-    id += 1;
-    return id;
+let _rowid = 0;
+
+function nextId() {
+  _rowid += 1;
+  return _rowid;
+}
+
+function newRow(label, duration) {
+  return {
+    label: label || '',
+    duration: duration || '',
+    id: nextId(),
   };
-})();
+}
 
 function defaults() {
   return {
     sv: 1,
     rows: [
-      { label: 'Start', duration: 0, id: nextId() },
-      { label: '', duration: '', id: nextId() },
-      { label: 'End', duration: 0, id: nextId() },
+      newRow('Start'),
+      newRow(),
+      newRow('End'),
     ],
     endTime: '9:00',
   };
@@ -46,25 +53,12 @@ function renderTime(s) {
   return str;
 }
 
-function newRow() {
-  return {
-    label: '',
-    duration: '',
-    id: nextId(),
-  };
-}
-
 function DurationRow() {
-  function handleUpdate2(e) {
-    state.endTime = e.target.value.trim();
-  }
-
   return {
     view: (vnode) => {
+      const first = vnode.attrs.row === 0;
       const last = (vnode.attrs.row >= state.rows.length - 1);
-      const firstOrLast = vnode.attrs.row === 0 || last;
       const row = state.rows[vnode.attrs.row];
-      // const allowDelete = !(firstOrLast || vnode.attrs.row == 1);
 
       let timeStr = '';
       const cols = [];
@@ -78,7 +72,7 @@ function DurationRow() {
 
       // Delete
       cols.push(
-        m('td', firstOrLast ? null : m('i.icon-trash-empty.delete', {
+        m('td', (first || last) ? null : m('i.icon-trash-empty.delete', {
           onclick: () => { state.rows.splice(vnode.attrs.row, 1); },
           title: 'Delete row',
         })),
@@ -107,15 +101,18 @@ function DurationRow() {
       );
 
       // Duration
-      let input = !firstOrLast ? 'input.duration' : 'input.hidden';
+      let input = !(first || last) ? 'input.duration' : 'input.hidden';
       cols.push(
         m('td.duration',
           m(input, {
+
+            // special handling for Enter
             onkeydown: (e) => {
               if (e.code === 'Enter') {
                 state.rows.splice(vnode.attrs.row + 1, 0, newRow());
               }
             },
+
             oninput: (e) => {
               let v = e.target.value.trim();
               duration = parseInt(v, 10);
@@ -136,11 +133,11 @@ function DurationRow() {
           m('input.time', {
             type: 'text',
             value: state.endTime,
-            oninput: (e) => { handleUpdate2(e); },
+            oninput: (e) => { state.endTime = e.target.value.trim(); },
           })));
       } else {
         cols.push(m('td.time',
-          m('span', { class: firstOrLast ? 'start-time-text' : 'time-text' }, m.trust(timeStr))));
+          m('span', { class: (first || last) ? 'start-time-text' : 'time-text' }, m.trust(timeStr))));
       }
       return m('tr', cols);
     },
@@ -172,7 +169,6 @@ function URL() {
       }
 
       const url = `${window.location.pathname}?${m.buildQueryString(clone)}`;
-      //return m('a', { href: url }, m.trust('<i class="icon-link"></i>'));
       return m('a', { href: url,  style: 'padding: 2em'}, 'Permalink');
     },
   };
@@ -217,19 +213,7 @@ function Main() {
         }
       }
 
-      //rows.push(
-      //  m('tr', { key: nextId() },
-      //    m('td', { colspan: 4 },
-      //      m('button', {
-      //        onclick() {
-      //          state = defaults();
-      //        },
-      //      }, 'Reset')
-      //    )
-      //  )
-      //);
-
-      const table = m('table.table', [
+      const table = m('table', [
         m('thead',
           m('tr', [
             m('th',
@@ -242,28 +226,18 @@ function Main() {
         m('tbody', rows),
       ]);
 
-      //history.pushState("", "title", marshalState());
       return m('div',[
         m('div', table),
         m('div', { style: 'text-align: center; margin-top: 2em;' }, [
           m(URL),
-          //m('span','|'),
           m('a', { href:"/", style: 'padding: 2em'}, "Reset"),
         ]),
-
-        /*
-          m('button', {
-            onclick() {
-              state = defaults();
-            },
-          }, 'Reset'),
-
-*/
       ]);
     },
   };
 }
 
+// handle permalink URLs
 const object = m.parseQueryString(window.location.search);
 if (Object.prototype.hasOwnProperty.call(object, 'rows')) {
   for (const row of object.rows) {
