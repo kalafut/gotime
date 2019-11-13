@@ -33,13 +33,13 @@ function demo() {
     sv: 1,
     rows: [
       newRow('Wake up'),
-      newRow('Shower', 10),
+      newRow('Shower etc.', 20),
       newRow('Eat', 10),
       newRow('Drive to airport', 50),
       newRow('Board', 30),
       newRow('Depart'),
     ],
-    endTime: '13:00',
+    endTime: '8:00',
     noFocus: false,
   };
 }
@@ -253,7 +253,7 @@ function Main() {
               state = defaults();
               state.noFocus = true;
             }
-          }, "Reset"),
+          }, "Clear"),
           m(URL),
         ]),
       ]);
