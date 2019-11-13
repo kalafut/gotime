@@ -32,6 +32,9 @@ a:focus, a:hover {
   text-decoration: underline;
 }
 
+a.table-link {
+  padding: 3em;
+}
 
 button, li {
   margin-bottom: 1.0rem;
@@ -80,8 +83,15 @@ tr {
   border-color: LightGrey;
 }
 
+tr:last-child
+{
+   border-bottom: none;
+}
+
 th {
   text-align: center;
+  border-bottom: 1pt solid black;
+  border-color: LightGrey;
 }
 
 td.description > input {

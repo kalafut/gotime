@@ -169,7 +169,7 @@ function URL() {
       }
 
       const url = `${window.location.pathname}?${m.buildQueryString(clone)}`;
-      return m('a', { href: url,  style: 'padding: 2em'}, 'Permalink');
+      return m('a.table-link', { href: url }, 'Permalink');
     },
   };
 }
@@ -230,7 +230,7 @@ function Main() {
         m('div', table),
         m('div', { style: 'text-align: center; margin-top: 2em;' }, [
           m(URL),
-          m('a', { href:"/", style: 'padding: 2em'}, "Reset"),
+          m('a.table-link', { href:"/" }, "Reset"),
         ]),
       ]);
     },
