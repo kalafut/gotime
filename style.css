@@ -105,13 +105,18 @@ td.duration > input{
 
 @media (min-width: 40rem) {
   td.duration {
-    width:10em;
+    width: 8em;
     text-align:center;
   }
-  td.duration > input[type='number'] {
+  td.duration > input {
     width:5em;
   }
 }
+
+input.duration {
+  text-align: center;
+}
+
 
 .time {
   text-align: right;
@@ -150,15 +155,13 @@ input.time {
 }
 
 @media (min-width: 40rem) {
-  input.time {
-    width: 4em;
-    padding-right: 5px,
+  td.time {
+    width: 6em;
+    text-align: right;
   }
-}
-
-
-input.duration {
-  text-align: center;
+  td.time > input {
+    width: 5em;
+  }
 }
 
 
