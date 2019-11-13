@@ -20,14 +20,31 @@ function defaults() {
     sv: 1,
     rows: [
       newRow('Start'),
-      newRow(),
+      newRow(''),
       newRow('End'),
     ],
-    endTime: '9:00',
+    endTime: '13:00',
+    noFocus: false,
   };
 }
 
-let state = defaults();
+function demo() {
+  return {
+    sv: 1,
+    rows: [
+      newRow('Wake up'),
+      newRow('Shower', 10),
+      newRow('Eat', 10),
+      newRow('Drive to airport', 50),
+      newRow('Board', 30),
+      newRow('Depart'),
+    ],
+    endTime: '13:00',
+    noFocus: false,
+  };
+}
+
+let state = demo();
 
 function renderTime(s) {
   let d = 0;
@@ -78,7 +95,6 @@ function DurationRow() {
         })),
       );
 
-      // Step description
       cols.push(
         m('td.description',
           m('input', {
@@ -176,13 +192,9 @@ function URL() {
 
 
 function Main() {
-  let noFocus = true;
+  state.noFocus = true;
 
   return {
-    oncreate: () => {
-      noFocus = false;
-    },
-
     view: () => {
       const rows = [];
       let total = -1;
@@ -205,7 +217,7 @@ function Main() {
         const duration = parseInt(row.duration, 10);
 
         rows.unshift(m(DurationRow, {
-          key: row.id, row: i, total, end, noFocus,
+          key: row.id, row: i, total, end, noFocus: state.noFocus,
         }));
 
         if (end >= 0 && !Number.isNaN(duration)) {
@@ -226,11 +238,18 @@ function Main() {
         m('tbody', rows),
       ]);
 
+      state.noFocus = false;
+
       return m('div',[
         m('div', table),
         m('div', { style: 'text-align: center; margin-top: 2em;' }, [
+          m('a.table-link', {
+            onclick: () => {
+              state = defaults();
+              state.noFocus = true;
+            }
+          }, "Reset"),
           m(URL),
-          m('a.table-link', { href:"/" }, "Reset"),
         ]),
       ]);
     },
