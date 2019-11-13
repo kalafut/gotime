@@ -45,6 +45,11 @@ function demo() {
 }
 
 let state = demo();
+let s = window.sessionStorage.getItem('state');
+if (s !== null) {
+  state = JSON.parse(s);
+  window.sessionStorage.clear();
+}
 
 function renderTime(s) {
   let d = 0;
@@ -265,6 +270,9 @@ if (Object.prototype.hasOwnProperty.call(object, 'rows')) {
   object.rows[0].duration = 0;
   object.rows[object.rows.length - 1].duration = 0;
   state = object;
+  window.sessionStorage.setItem('state', JSON.stringify(state));
+  window.location.replace('/');
+
 }
 
 
