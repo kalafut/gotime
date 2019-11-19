@@ -138,7 +138,7 @@ function DurationRow() {
               row.duration = duration;
             },
             value: row.duration,
-            type: 'number',
+            type: 'text',
             min: 0,
           })
       ));

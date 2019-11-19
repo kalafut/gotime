@@ -22,7 +22,7 @@ body {
   margin: auto;
 }
 
-/* hyperlinks */
+/* links */
 a {
   color: #0000ff;
   text-decoration: none;
@@ -105,21 +105,21 @@ td.description > input {
 }
 
 
+/* duration fields */
 td.duration {
-  width: 5em;
+  width: 4em;
+  text-align: center;
 }
 td.duration > input{
-  width: 5em;
+  width: 3em;
 }
-
 
 @media (min-width: 40rem) {
   td.duration {
     width: 8em;
-    text-align:center;
   }
   td.duration > input {
-    width:5em;
+    width: 5em;
   }
 }
 
@@ -127,7 +127,7 @@ input.duration {
   text-align: center;
 }
 
-
+/* time fields */
 .time {
   text-align: right;
   vertical-align: middle;
@@ -148,8 +148,8 @@ input {
 
   padding-top: 0.6rem;
   padding-bottom: 0.6rem;
-  padding-left: 1.0rem;
-  padding-right: 3px;
+  padding-left: 1rem;
+  padding-right: 1rem;
 
   margin-bottom: 0.5rem;
   margin-top: 0.5rem;
@@ -160,6 +160,7 @@ input {
 }
 
 input.time {
+  padding-right: 0.2em;
   min-width: 3em;
   font-weight: bold;
 }
