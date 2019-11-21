@@ -10,20 +10,25 @@ html {
 }
 
 body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
-  font-family: 'Helvetica Neue', sans-serif;
+  font-family: 'Helvetica Neue', 'Droid Sans', sans-serif;
   line-height: 1.4;
   font-size: 1.6em;
   letter-spacing: .01em;
   margin: 4px;
+  background-color: white;
 }
 
 .content {
   max-width: 40em;
   margin: auto;
   margin-top: 1em;
-
 }
+
+.verbiage {
+  margin-left: 1em;
+  margin-right: 1em;
+}
+
 
 /* links */
 a {
@@ -39,10 +44,9 @@ a.table-link {
   padding: 3em;
 }
 
-button, li {
+li {
   margin-bottom: 1.0rem;
 }
-
 
 h3 {
   font-weight: 300;
@@ -54,12 +58,17 @@ h3 {
 }
 
 
+img.trash {
+  margin-right: 0.3em;
+}
+
 img.gh {
   width: 30px;
   display: block;
   margin: auto;
   margin-top: 5em;
 }
+
 
 .delete {
   margin: 0.3em;
@@ -100,29 +109,20 @@ th {
 td.description {
   width: 50%;
 }
-td.description > input {
-  _width: 10em;
-  width: 90%;
-}
 
-@media (min-width: 40rem) {
-    td.description > input {
-    _width: 15em;
-  }
+td.description > input {
+  width: 90%;
 }
 
 
 /* duration fields */
 td.duration {
-  _width: 4em;
   width: 25%;
   text-align: center;
 }
 td.duration > input{
-  _width: 3em;
   width: 90%;
 }
-
 
 input.duration {
   text-align: center;
@@ -132,9 +132,12 @@ input.duration {
 td.time {
   text-align: right;
   vertical-align: middle;
-  _width: 3em;
   width: 25%;
   padding-right: 1em;
+}
+
+td.last-time {
+  padding-right: 0.2em;
 }
 
 .time-text {
@@ -147,8 +150,7 @@ td.time {
 
 
 input {
-  font-family: 'Droid Sans', 'Helvetica Neue', sans-serif;
-  font-family: 'Helvetica Neue', sans-serif;
+  font-family: 'Helvetica Neue', 'Droid Sans', sans-serif;
   background-color: #eeeeee;
   padding: 0.6rem 1rem 0.6rem 1rem;
   margin: 0.5rem auto 0.5rem;
@@ -157,80 +159,8 @@ input {
 }
 
 input.time {
-  padding-right: 0.2em;
+  padding-right: 0.8em;
   font-weight: bold;
   width: 90%;
   text-align: right;
-
-  _min-width: 3em;
 }
-
-/*
-@media (min-width: 40rem) {
-  td.time {
-    width: 6em;
-    text-align: right;
-  }
-  td.time > input {
-    width: 5em;
-  }
-}
-*/
-
-
-
-/* fontello css for icons */
-
-@font-face {
-  font-family: 'fontello';
-  src: url('fontello.woff?4347578');
-  font-weight: normal;
-  font-style: normal;
-}
-/* Chrome hack: SVG is rendered more smooth in Windozze. 100% magic, uncomment if you need it. */
-/* Note, that will break hinting! In other OS-es font will be not as sharp as it could be */
-/*
-@media screen and (-webkit-min-device-pixel-ratio:0) {
-  @font-face {
-    font-family: 'fontello';
-    src: url('../font/fontello.svg?24347578#fontello') format('svg');
-  }
-}
-*/
-
- [class^="icon-"]:before, [class*=" icon-"]:before {
-  font-family: "fontello";
-  font-style: normal;
-  font-weight: normal;
-  speak: none;
-
-  display: inline-block;
-  text-decoration: inherit;
-  width: 1em;
-  margin-right: .2em;
-  text-align: center;
-  /* opacity: .8; */
-
-  /* For safety - reset parent styles, that can break glyph codes*/
-  font-variant: normal;
-  text-transform: none;
-
-  /* fix buttons height, for twitter bootstrap */
-  line-height: 1em;
-
-  /* Animation center compensation - margins should be symmetric */
-  /* remove if not needed */
-  margin-left: .2em;
-
-  /* you can be more comfortable with increased icons size */
-  /* font-size: 120%; */
-
-  /* Font smoothing. That was taken from TWBS */
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-
-  /* Uncomment for 3D effect */
-  /* text-shadow: 1px 1px 1px rgba(127, 127, 127, 0.3); */
-}
-
-.icon-trash-empty:before { content: '\e802'; } /* '' */

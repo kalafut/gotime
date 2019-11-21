@@ -89,7 +89,8 @@ function DurationRow() {
 
       // Delete
       cols.push(
-        m('td', (first || last) ? null : m('i.icon-trash-empty.delete', {
+        m('td', (first || last) ? null : m('img.trash', {
+          src: 'trash.svg',
           onclick: () => { state.rows.splice(vnode.attrs.row, 1); },
           title: 'Delete row',
         })),
@@ -104,8 +105,8 @@ function DurationRow() {
                 v.dom.focus();
               }
             },
-            onkeydown: (e) => {
-              if (!last && e.code === 'Enter') {
+            onkeyup: (e) => {
+              if (!last && e.keyCode === 13) {
                 state.rows.splice(vnode.attrs.row + 1, 0, newRow());
               }
             },
@@ -117,14 +118,14 @@ function DurationRow() {
       );
 
       // Duration
-      let input = !(first || last) ? 'input.duration' : 'input.hidden';
+      const input = !(first || last) ? 'input.duration' : 'input.hidden';
       cols.push(
         m('td.duration',
           m(input, {
 
             // special handling for Enter
-            onkeydown: (e) => {
-              if (e.code === 'Enter') {
+            onkeyup: (e) => {
+              if (!last && e.keyCode === 13) {
                 state.rows.splice(vnode.attrs.row + 1, 0, newRow());
               }
             },
@@ -139,13 +140,13 @@ function DurationRow() {
             },
             value: row.duration,
             type: 'text',
-            min: 0,
-          })
+            inputmode: 'numeric',
+          }),
       ));
 
       // Time
       if (last) {
-        cols.push(m('td.time',
+        cols.push(m('td.time.last-time',
           m('input.time', {
             type: 'text',
             value: state.endTime,
@@ -229,8 +230,7 @@ function Main() {
         m('thead',
           m('tr', [
             m('th',
-              m('i.icon-trash-empty.delete.hidden')
-            ),
+              m('img.trash.hidden', { src: 'trash.svg' })),
             m('th.description', 'Step'),
             m('th.duration', 'Duration'),
             m('th.time', 'Time'),
@@ -240,15 +240,15 @@ function Main() {
 
       state.noFocus = false;
 
-      return m('div',[
+      return m('div', [
         m('div', table),
         m('div', { style: 'text-align: center; margin-top: 2em;' }, [
           m('a.table-link', {
             onclick: () => {
               state = defaults();
               state.noFocus = true;
-            }
-          }, "Clear"),
+            },
+          }, 'Clear'),
           m(URL),
         ]),
       ]);
