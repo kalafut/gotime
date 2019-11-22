@@ -46,22 +46,24 @@ function demo() {
 
 let state = demo();
 
-function renderTime(s) {
+function renderTime(seconds) {
   let d = 0;
-  let h = Math.floor(s / 60);
-  let m = s % 60;
+  let s = seconds;
 
-  // handle wrapping into previous day(s)
-  if (h < 0) {
-    d = Math.floor(-h / 24) + 1;
-    h += d * 24;
+  // normalize s into a positive range if necessary
+  if (s < 0) {
+    d = 1 + Math.floor(-(s + 1) / 1440);
+    s += d * 1440;
   }
-  m += (m < 0) ? 60 : 0;
+
+  const h = Math.floor(s / 60);
+  const m = s % 60;
 
   let mStr = m.toString();
   if (mStr.length < 2) {
     mStr = `0${mStr}`;
   }
+
   let str = `${h}:${mStr}`;
   if (d > 0) {
     str += `<br>(-${d}d)`;
