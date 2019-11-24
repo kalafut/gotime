@@ -193,6 +193,29 @@ function URL() {
   };
 }
 
+function Clear() {
+  return {
+    view: () => {
+      return m('a.table-link', {
+        onclick: () => {
+          state = defaults();
+          state.noFocus = true;
+        },
+      }, 'Clear');
+    }
+  }
+}
+
+function LinkRow() {
+  return {
+    view: () => {
+      return m('div.link-row', [
+        m('div.left.bottom-link', m(Clear)),
+        m('div.right.bottom-link', m(URL)),
+      ]);
+    },
+  };
+}
 
 function Main() {
   state.noFocus = true;
@@ -244,15 +267,7 @@ function Main() {
 
       return m('div', [
         m('div', table),
-        m('div', { style: 'text-align: center; margin-top: 2em;' }, [
-          m('a.table-link', {
-            onclick: () => {
-              state = defaults();
-              state.noFocus = true;
-            },
-          }, 'Clear'),
-          m(URL),
-        ]),
+        m(LinkRow),
       ]);
     },
   };
