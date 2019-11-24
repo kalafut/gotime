@@ -15,7 +15,7 @@ function newRow(label, duration) {
   };
 }
 
-function defaults() {
+function cleared() {
   return {
     sv: 1,
     rows: [
@@ -45,6 +45,12 @@ function demo() {
 }
 
 let state = demo();
+
+const urlParams = new URLSearchParams(window.location.search);
+if (urlParams.get('c') !== null) {
+  state = cleared();
+}
+
 
 function renderTime(seconds) {
   let d = 0;
@@ -205,24 +211,11 @@ function unmarshalURL() {
   }
 }
 
-function Clear() {
-  return {
-    view: () => {
-      return m('a.table-link', {
-        onclick: () => {
-          state = defaults();
-          state.noFocus = true;
-        },
-      }, 'Clear');
-    }
-  }
-}
-
 function LinkRow() {
   return {
     view: () => {
       return m('div.link-row', [
-        m('div.left.bottom-link', m(Clear)),
+        m('div.left.bottom-link', m('a[href=/?c=1]','Clear')),
         m('div.right.bottom-link', m(URL)),
       ]);
     },
