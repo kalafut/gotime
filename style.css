@@ -1,0 +1,155 @@
+*,
+*:after,
+*:before {
+  box-sizing: inherit;
+}
+
+html {
+  box-sizing: border-box;
+  font-size: 62.5%;
+}
+
+body {
+  font-family: 'Helvetica Neue', 'Droid Sans', sans-serif;
+  line-height: 1.4;
+  font-size: 1.6em;
+  letter-spacing: .01em;
+  margin: 4px;
+  background-color: white;
+}
+
+a {
+  color: #1473e6;
+  text-decoration: none;
+}
+
+a:focus, a:hover {
+  text-decoration: underline;
+}
+
+li {
+  margin-bottom: 1.0rem;
+}
+
+h3 {
+  font-weight: 400;
+  font-size: 2.8rem;
+}
+
+img.trash {
+  margin-right: 0.3em;
+  margin-top: 0.2em;
+}
+
+button {
+  margin-top: 1em;
+  background-color: #1473e6;
+  border: none;
+  color: white;
+  padding: 10px 20px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  border-radius: 5px;
+}
+
+input {
+  font-family: 'Helvetica Neue', 'Droid Sans', sans-serif;
+  background-color: #eeeeee;
+  padding: 0.6rem 1rem 0.6rem 1rem;
+  margin: 0.5rem auto 0.5rem;
+  font-size: 1.0em;
+  border: none;
+}
+
+table {
+  border-spacing: 0;
+  margin: auto;
+  border-collapse: collapse;
+
+  margin-top: 3em;
+  margin-bottom: 4rem;
+}
+
+tr {
+  border-bottom: 1pt solid black;
+  border-color: LightGrey;
+}
+
+tr:last-child
+{
+   border-bottom: none;
+}
+
+th {
+  text-align: center;
+  border-bottom: 1pt solid black;
+  border-color: LightGrey;
+}
+
+td.description {
+  width: 50%;
+}
+
+td.description > input {
+  width: 90%;
+}
+
+td.duration {
+  width: 25%;
+  text-align: center;
+}
+td.duration > input{
+  width: 90%;
+}
+
+input.duration {
+  text-align: center;
+}
+
+td.time {
+  text-align: right;
+  vertical-align: middle;
+  width: 25%;
+  padding-right: 1em;
+}
+
+td.last-time {
+  padding-right: 0.2em;
+}
+
+input.time {
+  padding-right: 0.8em;
+  font-weight: bold;
+  width: 90%;
+  text-align: right;
+}
+
+.content {
+  max-width: 40em;
+  margin: auto;
+  margin-top: 1em;
+}
+
+.verbiage {
+  margin-left: 1em;
+  margin-right: 1em;
+}
+
+.clear {
+  text-align: center;
+  margin-bottom: 5em;
+}
+
+.hidden {
+  visibility: hidden;
+}
+
+.time-text {
+  color: #5d5c5c;
+}
+
+.start-time-text {
+  font-weight: bold;
+}

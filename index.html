@@ -1,39 +1,52 @@
 <!DOCTYPE html>
 <html>
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <head>
+      <script async src="https://www.googletagmanager.com/gtag/js?id=UA-1441459-14"></script>
+      <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
 
+        gtag('config', 'UA-1441459-14');
+      </script>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="style.css?v=174577373">
+        <link rel="icon" href="data:,">
+        <title>Go Time</title>
+    </head>
 
-    <link rel="stylesheet" href="https://unpkg.com/spectre.css/dist/spectre.min.css">
-    <link rel="stylesheet" href="https://unpkg.com/spectre.css/dist/spectre-exp.min.css">
-    <link rel="stylesheet" href="https://unpkg.com/spectre.css/dist/spectre-icons.css">
+    <body>
+        <div class="content">
+            <div class="verbiage">
+                <h3>
+                    What time should I leave?
+                </h3>
 
-    <title>When to leave</title>
-</head>
+                Working backwards to figure out when to get going is familiar to all of us:
 
-<body>
-<p>
-    We've all gone through the exercise:
+                <p>
+                <strong><i>Flight leaves at 9:00, so be at the gate by 8:30, leave 20 minutes to get
+                        through the terminal, 20 for TSA, 15 to park and take shuttle, 45 minute drive..."</i></strong>
+                </p>
 
-    <p>
-    <i>Flight leaves at 9, so be at the gate by 8:30, leave 20 minutes to get
-        through the terminal, 20 for TSA, 15 to park and take shuttle, 45 minute drive..."</i>
-</p>
+                <p>The calculator below can help!</p>
 
-<p>
-    Enough! Let the computer do all that backwards
-    clock math for you. Decide on a finish time (24-hour format), then add (▲) steps in between with durations and optional descriptions. When you're done, you can bookmark the permalink URL as handy template
-    for your next trip (e.g. <a href="">example</a>).
-</p>
+                <ol>
+                    <li>Enter your target end time (24-hour format)</li>
+                    <li>Add the duration in minutes for intermediate steps (press Enter to insert rows)</li>
+                    <li>Bookmark the page at any time to use as a template for next time (<a href="/?state=WzEsIjg6MDAiLCJTdGFydCBtYWtpbmcgY29va2llcyIsIiIsIk1peCBpbmdyZWRpZW50cyBhbmQgcHJlaGVhdCBvdmVuIiwxNSwiTGF5IG91dCBjb29raWVzIiwxMCwiQmFrZSIsMTIsIkNvb2wiLDUsIkVhdCBjb29raWVzIiwiIl0=">example</a>)</li>
+                </ol>
+                <p>
+                <br>
+                Visit the <a href="https://github.com/kalafut/gotime">project on GitHub</a> if you find bugs or have questions.
+                </p>
+            </div>
 
-    <p>Enjoy!</p>
-</p>
-<div class="container">
-    <div id="dest"></div>
-</div>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/mithril/2.0.4/mithril.min.js"></script>
-<script src="index.js"></script>
-</body>
+            <div id="dest"></div>
+        </div>
+        <script src="mithril.min.js"></script>
+        <script src="index.js?v=574577373"></script>
+    </body>
 </html>
 
