@@ -163,34 +163,46 @@ function DurationRow() {
   };
 }
 
-function marshalState() {
-  const clone = Object.assign({}, state);
-  clone.rows = [];
-  for (const row of state.rows) {
-    const rClone = Object.assign({}, row);
-    delete rClone.id;
-    clone.rows.push(rClone);
-  }
-
-  const url = `${window.location.pathname}?${m.buildQueryString(clone)}`;
-  return url;
-}
-
 function URL() {
   return {
     view: () => {
-      const clone = Object.assign({}, state);
-      clone.rows = [];
-      for (const row of state.rows) {
-        const rClone = Object.assign({}, row);
-        delete rClone.id;
-        clone.rows.push(rClone);
-      }
+      const out = {
+        sv: state.sv,
+        rowData: [],
+        endTime: state.endTime,
+      };
 
-      const url = `${window.location.pathname}?${m.buildQueryString(clone)}`;
+      for (const row of state.rows) {
+        out.rowData.push(row.label);
+        out.rowData.push(row.duration);
+      }
+      const encodedState = { state: btoa(JSON.stringify(out)) };
+
+      const url = `${window.location.pathname}?${m.buildQueryString(encodedState)}`;
       return m('a.table-link', { href: url }, 'Permalink');
     },
   };
+}
+
+function unmarshalURL() {
+  const object = m.parseQueryString(window.location.search);
+  if (object.state !== undefined) {
+    let o;
+    try {
+      o = JSON.parse(atob(object.state));
+    } catch (e) {
+      console.error(e);
+      return;
+    }
+
+    o.rows = [];
+    for (let i = 0; i < o.rowData.length; i += 2) {
+      o.rows.push(newRow(o.rowData[i], o.rowData[i + 1]));
+    }
+    delete o.rowData;
+
+    state = o;
+  }
 }
 
 function Clear() {
@@ -273,17 +285,8 @@ function Main() {
   };
 }
 
-// handle permalink URLs
-const object = m.parseQueryString(window.location.search);
-if (Object.prototype.hasOwnProperty.call(object, 'rows')) {
-  for (const row of object.rows) {
-    row.id = nextId();
-  }
-  object.rows[0].duration = 0;
-  object.rows[object.rows.length - 1].duration = 0;
-  state = object;
-}
-
+// Load saved state, if present
+unmarshalURL();
 
 const root = document.getElementById('dest');
 m.mount(root, Main);
